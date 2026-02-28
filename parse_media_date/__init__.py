@@ -4,6 +4,12 @@ from philh_myftp_biz.pc import Path
 from re import split
 
 def parse(file:Path) -> from_stamp:
+    
+    if file.name().startswith('RPReplay_Final'):
+
+        stamp = int(file.name().split('Final')[1])
+
+        return from_stamp(stamp)
 
     parts: list[str] = split(
         pattern = r'[-_\s]',

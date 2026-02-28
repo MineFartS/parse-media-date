@@ -1,0 +1,9 @@
+[project]
+name = "parse_media_date"
+version = "v1"
+requires-python = ">=3.14,<4.0"
+dependencies = ["philh_myftp_biz"]
+
+[build-system]
+requires = [ "poetry-core>=2.0.0,<3.0.0",]
+build-backend = "poetry.core.masonry.api"

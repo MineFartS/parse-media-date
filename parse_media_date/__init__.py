@@ -27,7 +27,7 @@ def parse(file:Path) -> from_stamp:
 
                 return stamp
 
-            except ValueError:
+            except TypeError, ValueError:
                 pass
 
     return file.ctime()

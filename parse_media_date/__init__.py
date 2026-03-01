@@ -1,57 +1,68 @@
 from philh_myftp_biz.time import from_ymdhms, from_stamp
 from philh_myftp_biz.num import is_int
 from philh_myftp_biz.pc import Path
-from typing import SupportsInt
+from typing import SupportsInt, Any
 from re import split, findall
 
 def _from_ymdhms(
     year : SupportsInt = None,
     month: SupportsInt = None,
     day  : SupportsInt = None
-):
+) -> from_stamp | None:
 
     try:
         
-        stamp = from_ymdhms(
+        return from_ymdhms(
             year = int(year),
             month = int(month),
             day = int(day)
         )
 
-        return stamp
-
     except TypeError, ValueError:
+        pass
+
+def _from_stamp(
+    stamp: Any
+) -> from_stamp | None:
+
+    try:
+        
+        return from_stamp(stamp)
+
+    except ValueError:
         pass
 
 def parse(file:Path) -> from_stamp:
 
     #=========================================================================
-    
-    try:
-    
-        if file.name().startswith('RPReplay_Final'):
+    # Ex: "RPReplay_Final1593809676.mp4"
 
-            stamp = int(file.name().split('Final')[1])
+    if file.name().startswith('RPReplay_Final'):
 
-            return from_stamp(stamp)
+        stamp = _from_stamp(file.name().split('Final')[1])
 
-        elif file.name().startswith('FinalVideo_'):
+        if stamp:
+            return stamp
 
-            stamp = float(file.name().split('_')[1])
+    #=========================================================================
+    # Ex: "FinalVideo_1639183283.358880.mov"
 
-            return from_stamp(stamp)
-        
-    except ValueError:
-        pass
+    if file.name().startswith('FinalVideo_'):
+
+        stamp = _from_stamp(file.name().split('_')[1])
+
+        if stamp:
+            return stamp
     
     #=========================================================================
+    # Ex: "2020-04-10_15-20-14_445.jpg"
 
-    iso_parts: list[str] = findall(
+    parts: list[str] = findall(
         pattern = r'\d{4}[-_]\d{2}[-_]\d{2}',
         string = file.name()
     )
 
-    for part in iso_parts:
+    for part in parts:
 
         stamp = _from_ymdhms(*part.split('-'))
 
@@ -59,6 +70,58 @@ def parse(file:Path) -> from_stamp:
             return stamp
         
     #=========================================================================
+    # Ex: "629568258.099773 (1).jpg"
+
+    parts: list[str] = findall(
+        pattern = r'\d{7,10}\.\d{6}',
+        string = file.name()
+    )
+
+    for part in parts:
+
+        stamp = _from_stamp(part)
+
+        if stamp:
+            return stamp
+
+    #=========================================================================
+    # Ex: "2021_0323_105922_001.JPG"
+
+    parts: list[str] = findall(
+        pattern = r'[19|20]\d{3}_[0|1]\d{1}[0-3]\d{1}_',
+        string = file.name()
+    )
+
+    for part in parts:
+
+        stamp = _from_ymdhms(
+            year  = part[0:4],
+            month = part[5:7],
+            day   = part[7:9]
+        )
+
+        if stamp:
+            return stamp
+
+    #=========================================================================
+    # Ex: "8-27-2019_Toy Video Part 2.mp4"
+
+    parts: list[str] = findall(
+        pattern = r'\d{1,2}-\d{1,2}-\d{4}',
+        string = file.name()
+    )
+
+    for part in parts:
+
+        month, day, year = part.split('-')
+
+        stamp = _from_ymdhms(year, month, day)
+
+        if stamp:
+            return stamp
+
+    #=========================================================================
+    # Ex: "WIN_20161228_01_20_10_Pro.jpg"
 
     parts: list[str] = split(
         pattern = r'[-_\s]',

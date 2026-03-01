@@ -49,7 +49,7 @@ def parse(file:Path) -> from_stamp:
 
     elif file.name().startswith('FinalVideo_'):
 
-        stamp = int(file.name().split('_')[1])
+        stamp = float(file.name().split('_')[1])
 
         return from_stamp(stamp)
     

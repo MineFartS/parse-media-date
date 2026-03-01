@@ -5,9 +5,9 @@ from typing import SupportsInt
 from re import split, findall
 
 def _from_ymdhms(
-    year: SupportsInt,
-    month: SupportsInt,
-    day: SupportsInt
+    year : SupportsInt = None,
+    month: SupportsInt = None,
+    day  : SupportsInt = None
 ):
 
     try:

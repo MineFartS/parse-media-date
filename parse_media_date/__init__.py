@@ -28,7 +28,7 @@ def parse(file:Path) -> from_stamp:
     #=========================================================================
 
     iso_parts: list[str] = findall(
-        pattern = r'\d{4}-\d{2}-\d{2}',
+        pattern = r'\d{4}[-_]\d{2}[-_]\d{2}',
         string = file.name()
     )
 
@@ -44,6 +44,12 @@ def parse(file:Path) -> from_stamp:
     if file.name().startswith('RPReplay_Final'):
 
         stamp = int(file.name().split('Final')[1])
+
+        return from_stamp(stamp)
+
+    elif file.name().startswith('FinalVideo_'):
+
+        stamp = int(file.name().split('_')[1])
 
         return from_stamp(stamp)
     

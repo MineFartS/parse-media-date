@@ -26,6 +26,25 @@ def _from_ymdhms(
 def parse(file:Path) -> from_stamp:
 
     #=========================================================================
+    
+    try:
+    
+        if file.name().startswith('RPReplay_Final'):
+
+            stamp = int(file.name().split('Final')[1])
+
+            return from_stamp(stamp)
+
+        elif file.name().startswith('FinalVideo_'):
+
+            stamp = float(file.name().split('_')[1])
+
+            return from_stamp(stamp)
+        
+    except ValueError:
+        pass
+    
+    #=========================================================================
 
     iso_parts: list[str] = findall(
         pattern = r'\d{4}[-_]\d{2}[-_]\d{2}',
@@ -39,20 +58,6 @@ def parse(file:Path) -> from_stamp:
         if stamp:
             return stamp
         
-    #=========================================================================
-    
-    if file.name().startswith('RPReplay_Final'):
-
-        stamp = int(file.name().split('Final')[1])
-
-        return from_stamp(stamp)
-
-    elif file.name().startswith('FinalVideo_'):
-
-        stamp = float(file.name().split('_')[1])
-
-        return from_stamp(stamp)
-    
     #=========================================================================
 
     parts: list[str] = split(

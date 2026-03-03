@@ -37,9 +37,9 @@ def parse(file:Path) -> from_stamp:
     #=========================================================================
     # Ex: "RPReplay_Final1593809676.mp4"
 
-    if file.name().startswith('RPReplay_Final'):
+    if file.name.startswith('RPReplay_Final'):
 
-        stamp = _from_stamp(file.name().split('Final')[1])
+        stamp = _from_stamp(file.name.split('Final')[1])
 
         if stamp:
             return stamp
@@ -47,9 +47,9 @@ def parse(file:Path) -> from_stamp:
     #=========================================================================
     # Ex: "FinalVideo_1639183283.358880.mov"
 
-    if file.name().startswith('FinalVideo_'):
+    if file.name.startswith('FinalVideo_'):
 
-        stamp = _from_stamp(file.name().split('_')[1])
+        stamp = _from_stamp(file.name.split('_')[1])
 
         if stamp:
             return stamp
@@ -59,7 +59,7 @@ def parse(file:Path) -> from_stamp:
 
     parts: list[str] = findall(
         pattern = r'\d{4}[-_]\d{2}[-_]\d{2}',
-        string = file.name()
+        string = file.name
     )
 
     for part in parts:
@@ -74,7 +74,7 @@ def parse(file:Path) -> from_stamp:
 
     parts: list[str] = findall(
         pattern = r'\d{7,10}\.\d{6}',
-        string = file.name()
+        string = file.name
     )
 
     for part in parts:
@@ -89,7 +89,7 @@ def parse(file:Path) -> from_stamp:
 
     parts: list[str] = findall(
         pattern = r'[19|20]\d{3}_[0|1]\d{1}[0-3]\d{1}_',
-        string = file.name()
+        string = file.name
     )
 
     for part in parts:
@@ -108,7 +108,7 @@ def parse(file:Path) -> from_stamp:
 
     parts: list[str] = findall(
         pattern = r'\d{1,2}-\d{1,2}-\d{4}',
-        string = file.name()
+        string = file.name
     )
 
     for part in parts:
@@ -125,7 +125,7 @@ def parse(file:Path) -> from_stamp:
 
     parts: list[str] = split(
         pattern = r'[-_\s]',
-        string = file.name()
+        string = file.name
     )
 
     for part in parts:
@@ -146,6 +146,6 @@ def parse(file:Path) -> from_stamp:
     
     #=========================================================================
 
-    return file.ctime()
+    return file.ctime
 
     #=========================================================================
